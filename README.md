@@ -8,6 +8,13 @@ The main idea behind the contract is to pass in a threshold of detached signatur
 
 The audit report by [ConsenSys Diligence'](https://consensys.net/diligence/) can be found [here](./audit.pdf). 
 
+## Fork Changes
+
+- Remove EIP712 in order to allow the multisig to be compatible with Ledger
+- Add a list of required signers to have spending policies like: 4-of-6 where owners are ABCDEF AND 2-of-3 ABC need to sign (e.g. ADEF would be invalid, even though it's 4-of-6 because it doesn't satisfy the 2of3ABC condition)
+- Convert tests to buidler
+
+
 ## Version 2.0.0 Update to EIP712
 
 In version 2.0.0 the Simple Multisig was updated to use the EIP712 signature standard. This means that the signature format of the previous version is no longer compatible. If your contract is already deployed and in use it still works but that version will no longer be supported in the future. We recommend moving ETH and tokens over to a newly deployed contract and using the EIP712 format going forward. Another change to be aware of is that the constructor now takes an extra parameter `chainId` to specify which network the contract is deployed on.
