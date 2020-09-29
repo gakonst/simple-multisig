@@ -60,12 +60,10 @@ contract SimpleMultiSig {
   ) private view {
     require(sigR.length >= threshold, "not enough signatures");
     require(sigR.length == sigS.length && sigR.length == sigV.length, "sig arrays lengths do not match");
-    // TODO: Re-enable this
-    // hash = keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", hash));
-    // console.logBytes32(hash);
+    hash = keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", hash));
+
     address lastAdd = address(0); // cannot have address(0) as an owner
     uint length = sigV.length;
-
     uint numRequiredSigners = 0;
     address[] memory _owners = ownersArr;
     uint256[] memory _requiredSignersIdxs = requiredSignersIdxs;

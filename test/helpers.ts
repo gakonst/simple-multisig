@@ -27,19 +27,17 @@ export const createSigs = async (
     gasLimit: BigNumberish,
 ) => {
     // sign all the data
-    let hash = solidityKeccak256(
+    let hash = ethers.utils.arrayify(solidityKeccak256(
         ['uint256', 'address', 'uint256', 'bytes32', 'address', 'address', 'uint256'],
         [gasLimit, destinationAddr, value, keccak256(data), multisigAddr, executor, nonce]
-    )
+    ))
 
     let sigV = []
     let sigR = []
     let sigS = []
 
     for (let i = 0; i < wallets.length; i++) {
-        // TODO: Re-enable this
-        const sig = wallets[i]._signingKey().signDigest(hash);
-        // const sig = splitSignature(await wallets[i].signMessage(hash))
+        const sig = ethers.utils.splitSignature(await wallets[i].signMessage(hash))
         sigV.push(sig.v)
         sigR.push(sig.r)
         sigS.push(sig.s)
