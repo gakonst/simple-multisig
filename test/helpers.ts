@@ -48,13 +48,13 @@ export const createSigs = async (
     return {sigV, sigR, sigS}
 }
 
-export const executeSendSuccess = async (wallets: Wallet[], owners: string[], threshold: number) => {
+export const executeSendSuccess = async (wallets: Wallet[], owners: string[], threshold: number, requiredSignerIdxs: number[] = []) => {
     const provider = wallets[0].provider
     const deployer = wallets[0]
     const executor = wallets[0].address
     const msgSender = wallets[0].address
 
-    const multisig = await deployContract(deployer, SimpleMultiSig, [threshold, owners])
+    const multisig = await deployContract(deployer, SimpleMultiSig, [threshold, owners, requiredSignerIdxs])
     const randomAddr = Wallet.createRandom().address
 
     // Receive funds
@@ -111,12 +111,12 @@ export const executeSendSuccess = async (wallets: Wallet[], owners: string[], th
     expect(nonce).to.equal(3)
 }
 
-export const executeSendFailure = async (wallets: Wallet[], owners: string[], threshold: number, reason = "recovered sender is not an owner", nonceOffset: number = 0) => {
+export const executeSendFailure = async (wallets: Wallet[], owners: string[], threshold: number, reason = "recovered sender is not an owner", nonceOffset: number = 0, requiredSignerIdxs: number[] = []) => {
     const deployer = wallets[0]
     const executor = wallets[0].address
     const msgSender = wallets[0].address
 
-    const multisig = await deployContract(deployer, SimpleMultiSig, [threshold, owners])
+    const multisig = await deployContract(deployer, SimpleMultiSig, [threshold, owners, requiredSignerIdxs])
     const randomAddr = Wallet.createRandom().address
 
     // Receive funds

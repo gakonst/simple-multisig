@@ -1,6 +1,7 @@
 import { BigNumber, Wallet } from 'ethers'
 import { waffle } from "@nomiclabs/buidler";
 import { executeSendSuccess, executeSendFailure } from "./helpers"
+import { expect } from 'chai'
 
 const toAddresses = (wallets: Wallet[]): string[] => wallets.map(w => w.address)
 
@@ -18,7 +19,42 @@ describe('SimpleMultiSig', () => {
         }
     }
 
-  describe("3 signers, threshold 2", () => {
+  describe("5 signers, threshold 3, with 2 required signers", () => {
+    const owners = toAddresses(wallets.slice(0, 5))
+    const threshold = 3;
+    const requiredSignerIdxs = [1, 2];
+
+    it("should succeed with all signers", async () => {
+        const signers = wallets.slice(0, 5)
+        expect(signers.length).to.be.equal(5)
+        await executeSendSuccess(signers, owners, threshold, requiredSignerIdxs)
+    })
+
+    it("should succeed with threshold as long as the required are present", async () => {
+        const signers = wallets.slice(1, 4)
+        expect(signers.length).to.be.equal(3)
+        await executeSendSuccess(signers, owners, threshold, requiredSignerIdxs)
+    })
+
+    it("should fail if any of the required signers is missing", async () => {
+        // omit 1 and 2
+        let signers = [wallets[0], ...wallets.slice(2, 5)]
+        expect(signers.length).to.be.equal(4)
+        await executeSendFailure(signers, owners, threshold, "not enough final signers authorized the call", 0, requiredSignerIdxs)
+
+        // omit 1
+        signers = [...wallets.slice(0, 2), ...wallets.slice(3, 5)]
+        expect(signers.length).to.be.equal(4)
+        await executeSendFailure(signers, owners, threshold, "not enough final signers authorized the call", 0, requiredSignerIdxs)
+
+        // omit 2
+        signers = [...wallets.slice(0, 1), ...wallets.slice(3, 5)]
+        expect(signers.length).to.be.equal(3)
+        await executeSendFailure(signers, owners, threshold, "not enough final signers authorized the call", 0, requiredSignerIdxs)
+    })
+  })
+
+  describe("3 signers, threshold 2, no required signers", () => {
     const owners = toAddresses(wallets.slice(0, 3))
     const threshold = 2;
 
