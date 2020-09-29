@@ -2,16 +2,16 @@
   "name": "simple-multisig",
   "version": "1.0.4",
   "description": "Simple Ethereum multisig contract",
-  "main": "test/simplemultisig.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "test": "truffle test"
+    "build": "npx buidler compile",
+    "test": "npx buidler test"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/christianlundkvist/simple-multisig.git"
+    "url": "git+https://github.com/gakonst/simple-multisig.git"
   },
   "keywords": [
     "Ethereum",
@@ -20,11 +20,22 @@
   "author": "christian.lundkvist@gmail.com",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/christianlundkvist/simple-multisig/issues"
+    "url": "https://github.com/gakonst/simple-multisig/issues"
   },
-  "homepage": "https://github.com/christianlundkvist/simple-multisig#readme",
-  "devDependencies": {
-    "eth-lightwallet": "*",
-    "bluebird": "*"
+  "homepage": "https://github.com/gakonst/simple-multisig#readme",
+  "dependencies": {
+    "@nomiclabs/buidler": "^1.4.7",
+    "@nomiclabs/buidler-ethers": "^2.0.0",
+    "@nomiclabs/buidler-waffle": "^2.1.0",
+    "@types/mocha": "^8.0.3",
+    "bluebird": "^3.7.2",
+    "chai": "^4.2.0",
+    "dotenv": "^8.2.0",
+    "eth-lightwallet": "^4.0.0",
+    "ethereum-waffle": "^3.1.1",
+    "ethers": "^5.0.14",
+    "truffle": "^5.1.46",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.0.3"
   }
 }
