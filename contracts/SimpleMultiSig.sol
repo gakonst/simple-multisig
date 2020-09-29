@@ -6,10 +6,12 @@ contract SimpleMultiSig {
   uint public threshold;             // immutable state
   mapping (address => bool) public isOwner; // immutable state
   address[] public ownersArr;        // immutable state
+
   uint256[] public requiredSignersIdxs;        // immutable state
+  uint256 requiredSignersThreshold;
 
   // Note that owners_ must be strictly increasing, in order to prevent duplicates
-  constructor(uint threshold_, address[] memory owners_, uint256[] memory requiredSignersIdxs_) public {
+  constructor(uint threshold_, address[] memory owners_, uint256[] memory requiredSignersIdxs_, uint256 requiredSignersThreshold_) public {
     require(owners_.length <= 10 && threshold_ <= owners_.length && threshold_ > 0);
 
     address lastAdd = address(0);
@@ -21,6 +23,7 @@ contract SimpleMultiSig {
     ownersArr = owners_;
     threshold = threshold_;
     requiredSignersIdxs = requiredSignersIdxs_;
+    requiredSignersThreshold = requiredSignersThreshold_;
   }
 
   // Note that address recovered from signatures must be strictly increasing, in order to prevent duplicates
@@ -77,7 +80,7 @@ contract SimpleMultiSig {
       }
     }
 
-    require(numRequiredSigners >= _requiredSignersIdxs.length, "not enough final signers authorized the call");
+    require(numRequiredSigners >= requiredSignersThreshold, "not enough final signers authorized the call");
   }
 
   function isRequiredSigner(address addr, address[] memory owners, uint256[] memory _requiredSignerIdxs) private pure returns (bool) {
