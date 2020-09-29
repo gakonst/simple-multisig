@@ -1,12 +1,10 @@
 pragma solidity ^0.6.6;
 
-// import "@nomiclabs/buidler/console.sol";
-
 contract SimpleMultiSig {
   uint public nonce;                 // (only) mutable state
 
   uint public threshold;             // immutable state
-  mapping (address => bool) isOwner; // immutable state
+  mapping (address => bool) public isOwner; // immutable state
   address[] public ownersArr;        // immutable state
   uint256[] public requiredSignersIdxs;        // immutable state
 
@@ -26,6 +24,7 @@ contract SimpleMultiSig {
   }
 
   // Note that address recovered from signatures must be strictly increasing, in order to prevent duplicates
+  // TODO: Should we add a validAfter / validUntil parameter in the message hash?
   function execute(
       uint8[] memory sigV, 
       bytes32[] memory sigR, 
@@ -33,7 +32,7 @@ contract SimpleMultiSig {
       address destination, 
       uint value, 
       bytes memory data, 
-      address executor, 
+      address executor,
       uint gasLimit
   ) public {
     require(executor == msg.sender || executor == address(0));
